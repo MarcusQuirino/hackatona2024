@@ -64,9 +64,10 @@ export async function GET() {
   }
 }
 
-export async function PUT(request: Request, req: NextRequest) {
-  const requisitionId = req.nextUrl.pathname.split('/').slice(-1)[0];
-  const { organizationId, taskId, quantity } = await request.json() as 
+export async function PUT(req: NextRequest) {
+  const url = new URL(req.url);
+  const requisitionId = url.searchParams.get('requisitionId');
+  const { organizationId, taskId, quantity } = await req.json() as 
   {
     organizationId: string,
     taskId: string,
@@ -112,7 +113,8 @@ export async function PUT(request: Request, req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const requisitionId = req.nextUrl.pathname.split('/').slice(-1)[0];
+  const url = new URL(req.url);
+  const requisitionId = url.searchParams.get('requisitionId');
   
   if (!requisitionId) {
     return NextResponse.json(

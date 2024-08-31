@@ -1,36 +1,27 @@
-import { db } from "@/server/db";
-import { Organization } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
-import { NextResponse, type NextRequest } from "next/server";
+import { db } from "@/server/db"
+import { Organization } from "@/server/db/schema"
+import { randomUUID } from "crypto"
+import { eq } from "drizzle-orm"
+import { NextResponse, type NextRequest } from "next/server"
 
-export async function GET(req: NextRequest) {
-  const organizationId = req.nextUrl.pathname.split('/').slice(-1)[0];
-  
-
-  if (!organizationId) {
-    return NextResponse.json(
-      {
-        error: 'Organization ID is required',
-      },
-      {
-        status: 400,
-      }
-    );
-  }
+export async function POST(request: Request) {
+  const { name } = await request.json() as { name: string }
 
   try {
-    const organization = await db.query.Organization.findFirst({
-      where: eq(Organization.organizationId, organizationId),
-    });
+    const [ organization ] = await db.insert(Organization).values({
+      organizationId: randomUUID(),
+      name,
+    }).returning()
 
     return NextResponse.json(
       {
         organization,
       },
       {
-        status: 200,
+        status: 201,
       }
-    );
+    )    
+
   } catch (error) {
     return NextResponse.json(
       {
@@ -39,15 +30,36 @@ export async function GET(req: NextRequest) {
       {
         status: 400,
       }
-    );
+    )
+  }
+}
+
+export async function GET() {
+  try {
+    const organizations = await db.query.Organization.findMany()
+    return NextResponse.json(
+      {
+        organizations,
+      },
+      {
+        status: 200,
+      }
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error,
+      },
+      {
+        status: 400,
+      }
+    )
   }
 }
 
 export async function PUT(request: Request, req: NextRequest) {
-  const organizationId = req.nextUrl.pathname.split('/').slice(-1)[0];
-  const { name } = await request.json() as { name: string }
-
-  console.log('organizationId', organizationId);
+  const organizationId = req.nextUrl.searchParams.get('organizationId');
+  const { name } = await request.json() as { organizationId: string, name: string }
 
   if (!organizationId) {
     return NextResponse.json(
@@ -87,7 +99,7 @@ export async function PUT(request: Request, req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const organizationId = req.nextUrl.pathname.split('/').slice(-1)[0];
+    const organizationId = req.nextUrl.searchParams.get('organizationId');
 
   if (!organizationId) {
     return NextResponse.json(
@@ -101,13 +113,11 @@ export async function DELETE(req: NextRequest) {
   }
 
   try {
-    await db.delete(Organization)
-      .where(eq(Organization.organizationId, organizationId))
-      .returning()
+    await db.delete(Organization).where(eq(Organization.organizationId, organizationId))
 
     return NextResponse.json(
       {
-        message: `Organization ${organizationId} deleted`,
+        message: `Organization ${organizationId} deleted`
       },
       {
         status: 200,
@@ -124,4 +134,3 @@ export async function DELETE(req: NextRequest) {
     )
   }
 }
-
