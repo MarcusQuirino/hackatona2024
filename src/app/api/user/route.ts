@@ -44,18 +44,27 @@ export async function PUT(req: NextRequest) {
         name: string;
         qualities: number;
         email: string;
-        role: number
-      };
+        role: number;
+    };
+
     try {
-        await db.update(User)
-        .set({
-            name: res.name,
-            qualities: res.qualities,
-            email: res.email,
-            role: res.role
-        })
-        .where(eq(User.userId, res.userId));
-        return NextResponse.json({data: "updated"});
+        const url = new URL(req.url);
+        const userId = url.searchParams.get('userId');
+
+        if (userId) {
+            await db.update(User)
+                .set({
+                    name: res.name,
+                    qualities: res.qualities,
+                    email: res.email,
+                    role: res.role,
+                })
+                .where(eq(User.userId, userId));
+
+            return NextResponse.json({ data: 'updated' });
+        } else {
+            return NextResponse.json({ error: 'userId is required' });
+        }
     } catch (error) {
         return NextResponse.json({ error: 'Failed to update user' });
     }
