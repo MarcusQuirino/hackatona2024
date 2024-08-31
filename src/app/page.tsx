@@ -23,8 +23,8 @@ export default async function HomePage() {
   return (
     <main className="bg-onboard flex h-screen flex-col items-center justify-center bg-cover bg-center">
       <div className="flex max-sm:flex-col 2xl:h-3/5 2xl:w-1/2 md:h-1/2 md:w-1/3 rounded-3xl max-sm:h-2/3 items-center">
-        <div className="flex max-sm:h-2/3 h-full max-sm:w-[90%] w-2/3 flex-col items-center justify-center max-sm:rounded-t-3xl bg-primary px-12">
-          <p className="mb-4 2xl:text-3xl text-white md:text-md">
+        <div className="flex max-sm:h-2/3 h-full max-sm:w-[90%] w-2/3 flex-col items-center justify-center max-sm:rounded-t-3xl rounded-l-3xl bg-primary px-12">
+          <p className="mb-4 2xl:text-2xl text-white md:text-md">
             Seu Poder de Mudar o Mundo
           </p>
           <p className="lg:mb-4 text-justify 2xl:text-lg text-white max-sm:text-sm">
@@ -40,7 +40,7 @@ export default async function HomePage() {
             nós hoje e descubra o herói que existe em você!
           </p>
         </div>
-        <div className="flex max-sm:h-1/2 h-full max-sm:w-[90%] w-2/3 flex-col items-center justify-center max-sm:rounded-b-3xl border px-12">
+        <div className="flex max-sm:h-1/2 h-full max-sm:w-[90%] w-2/3 flex-col items-center justify-center max-sm:rounded-b-3xl rounded-r-3xl border px-12">
           <SignedOut>
             <Image
               src={Savepointlogo}
