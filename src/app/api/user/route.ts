@@ -18,17 +18,21 @@ export async function POST(req: NextRequest) {
     const res = (await req.json()) as {
         userId: string;
         name: string;
-        qualities: number;
+        qualities: number[];
         email: string;
-        role: number
+        role: number;
+        state: string;
+        city: string;
     }
     try {
         await db.insert(User).values({
             userId: res.userId,
             name: res.name,
-            qualities: res.qualities,
+            qualities: JSON.stringify(res.qualities),
             email: res.email,
             role: res.role,
+            state: res.state,
+            city: res.city
         });
     } catch (error) {
         if (error instanceof Error) {
@@ -42,9 +46,11 @@ export async function PUT(req: NextRequest) {
     const res = (await req.json()) as {
         userId: string;
         name: string;
-        qualities: number;
+        qualities: number[];
         email: string;
         role: number;
+        state: string;
+        city: string;
     };
 
     try {
@@ -55,9 +61,11 @@ export async function PUT(req: NextRequest) {
             await db.update(User)
                 .set({
                     name: res.name,
-                    qualities: res.qualities,
+                    qualities: JSON.stringify(res.qualities),
                     email: res.email,
                     role: res.role,
+                    state: res.state,
+                    city: res.city
                 })
                 .where(eq(User.userId, userId));
 
@@ -85,4 +93,3 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
     }
 }
-
