@@ -23,11 +23,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${nunito.variable}`}>
+      <html lang="en" className={nunito.className}>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
-            nunito.variable
           )}
         >
           <ThemeProvider
