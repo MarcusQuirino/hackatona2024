@@ -41,23 +41,22 @@ export const Task = sqliteTable('Task', {
 });
 
 export const TaskRequisition = sqliteTable('TaskRequisition', {
-    organizationId: text('organization_id').notNull().references(() => Task.organizationId),
+    organizationId: text('organization_id').notNull().references(() => Organization.organizationId),
     taskId: text('task_id').notNull().references(() => Task.taskId),
     requisitionId: text('requisition_id').notNull(),
     quantity: integer('quantity').notNull(),
-    joined: integer('').notNull()
+    joined: integer('joined').notNull()
 });
 
 export const UserTask = sqliteTable('UserTask', {
     userId: text('user_id').notNull().references(() => User.userId),
-    organizationId: text('organization_id').notNull().references(() => Task.organizationId),
+    organizationId: text('organization_id').notNull().references(() => Organization.organizationId),
     taskId: text('task_id').notNull().references(() => Task.taskId),
     status: integer('status').default(1),
-    joinDate: int('join_date', { mode: "timestamp" }) .default(
-        sql`(unixepoch())`,
-    ),
-    finishedDate: int('finished_date', { mode: "timestamp" })
+    joinDate: int('join_date', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+    finishedDate: int('finished_date', { mode: 'timestamp' })
 });
+
 
 // Relações
 export const UserRelations = relations(User, ({ one, many }) => ({
@@ -76,17 +75,25 @@ export const TaskRelations = relations(Task, ({ many }) => ({
 export const TaskRequisitionRelations = relations(TaskRequisition, ({ one }) => ({
     task: one(Task, {
         fields: [TaskRequisition.taskId],
-        references: [Task.taskId]
-    })
+        references: [Task.taskId],
+    }),
+    organization: one(Organization, {
+        fields: [TaskRequisition.organizationId],
+        references: [Organization.organizationId],
+    }),
 }));
 
 export const UserTaskRelations = relations(UserTask, ({ one }) => ({
     task: one(Task, {
         fields: [UserTask.taskId],
-        references: [Task.taskId]
+        references: [Task.taskId],
     }),
     user: one(User, {
         fields: [UserTask.userId],
-        references: [User.userId]
-    })
+        references: [User.userId],
+    }),
+    organization: one(Organization, {
+        fields: [UserTask.organizationId],
+        references: [Organization.organizationId],
+    }),
 }));
