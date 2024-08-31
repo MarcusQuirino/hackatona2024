@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const { organizationId, name, description, qualities, urgency, status } =
     (await request.json()) as {
       organizationId: string;
@@ -15,28 +15,21 @@ export async function POST(request: NextRequest) {
       status: number;
     };
 
-  try {
-    const [task] = await db
-      .insert(Task)
-      .values({
-        taskId: randomUUID(),
-        organizationId,
-        name,
-        description,
-        qualities,
-        urgency,
-        status,
-      })
-      .returning();
+  const taskId = randomUUID();
 
-    return NextResponse.json(
-      {
-        task,
-      },
-      {
-        status: 201,
-      },
-    );
+  try {
+    await db.insert(Task).values({
+      taskId,
+      organizationId,
+      name,
+      description,
+      qualities,
+      urgency,
+      status,
+    })
+
+    return NextResponse.json({ message: `Task ${taskId} created`}, { status: 201 });
+    
   } catch (error) {
     return NextResponse.json(
       {
@@ -74,60 +67,37 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
-  const url = new URL(req.url);
-  const taskId = url.searchParams.get('taskId');
-  const { organizationId, name, description, qualities, urgency, status } =
-    (await req.json()) as {
+  const res = (await req.json()) as {
       organizationId: string;
       name: string;
       description: string;
       qualities: string;
       urgency: number;
       status: number;
-    };
-
-  if (!taskId) {
-    return NextResponse.json(
-      {
-        error: "Task ID is required",
-      },
-      {
-        status: 400,
-      },
-    );
-  }
+  };
 
   try {
-    const [task] = await db
-      .update(Task)
-      .set({
-        organizationId,
-        name,
-        description,
-        qualities,
-        urgency,
-        status,
-      })
-      .where(eq(Task.taskId, taskId))
-      .returning();
+      const url = new URL(req.url);
+      const taskId = url.searchParams.get('taskId');
 
-    return NextResponse.json(
-      {
-        task,
-      },
-      {
-        status: 200,
-      },
-    );
+      if (taskId) {
+          await db.update(Task)
+              .set({
+                organizationId: res.organizationId,
+                name: res.name,
+                description: res.description,
+                qualities: res.qualities,
+                urgency: res.urgency,
+                status: res.status,
+              })
+              .where(eq(Task.taskId, taskId));
+
+          return NextResponse.json({ data: 'updated' });
+      } else {
+          return NextResponse.json({ error: 'taskId is required' });
+      }
   } catch (error) {
-    return NextResponse.json(
-      {
-        error,
-      },
-      {
-        status: 400,
-      },
-    );
+      return NextResponse.json({ error: 'Failed to update task' });
   }
 }
 
