@@ -10,8 +10,8 @@ export default function QuestsPage() {
   const quests = [1, 2, 3, 4, 5];
 
   return (
-    <main className="flex h-[calc(100vh-5rem)] items-center justify-around">
-      <Tabs defaultValue="active" className="w-4/5 h-full">
+    <main className="flex h-[calc(100vh-12rem)] items-center justify-around">
+      <Tabs defaultValue="active" className="w-4/5 h-full pt-10">
         <TabsList className="grid w-1/3 grid-cols-3">
           <TabsTrigger value="active">Ativas</TabsTrigger>
           <TabsTrigger value="waiting">Em espera</TabsTrigger>
