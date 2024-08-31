@@ -26,7 +26,7 @@ export default function BoardPage() {
               <Swords size={32} />
             </div>
             <div className="flex flex-col">
-              <h3 className="text-xl font-semibold">Quests Abertas</h3>
+              <h3 className="text-xl font-semibold">Ações Abertas</h3>
               <p className="text-sm text-muted-foreground">
                 Abertas para ajuda
               </p>
@@ -39,7 +39,7 @@ export default function BoardPage() {
               <RefreshCcw size={32} />
             </div>
             <div className="flex flex-col">
-              <h3 className="text-xl font-semibold">Quests em Andamento</h3>
+              <h3 className="text-xl font-semibold">Ações em Andamento</h3>
               <p className="text-sm text-muted-foreground">
                 Aguarde notificações
               </p>
