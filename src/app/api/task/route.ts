@@ -12,6 +12,8 @@ export async function POST(request: Request) {
     qualities: number[];
     urgency: number;
     status: number;
+    state: string;
+    city: string;
   };
 
   const taskId = randomUUID();
@@ -25,6 +27,8 @@ export async function POST(request: Request) {
       qualities: JSON.stringify(res.qualities),
       urgency: res.urgency,
       status: res.status,
+      state: res.state,
+      city: res.city
     });
 
     return NextResponse.json(
@@ -75,6 +79,8 @@ export async function PUT(req: NextRequest) {
     qualities: string;
     urgency: number;
     status: number;
+    state: string;
+    city: string;
   };
 
   try {
@@ -91,6 +97,8 @@ export async function PUT(req: NextRequest) {
           qualities: res.qualities,
           urgency: res.urgency,
           status: res.status,
+          state: res.state,
+          city: res.city
         })
         .where(eq(Task.taskId, taskId));
 

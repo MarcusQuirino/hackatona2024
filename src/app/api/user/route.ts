@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
             state: res.state,
             city: res.city
         });
+        return NextResponse.json({message: "created"})
     } catch (error) {
         if (error instanceof Error) {
             return NextResponse.json(error.message);
