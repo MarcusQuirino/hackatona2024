@@ -5,24 +5,27 @@ import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(request: Request) {
-  const { organizationId, taskId, quantity } = await request.json() as 
+  const res = (await request.json()) as 
   {
     organizationId: string,
     taskId: string,
     quantity: number,
+    requisitionId: string,
+    joined: number,
   };
   
   try {
-    const [taskRequisition] = await db.insert(TaskRequisition).values({
-      organizationId,
-      taskId,
-      requisitionId: randomUUID(),
-      quantity,
-    }).returning();
+    await db.insert(TaskRequisition).values({
+      organizationId: res.organizationId,
+      taskId: res.taskId,
+      requisitionId: res.requisitionId,
+      quantity: res.quantity,
+      joined: res.joined,
+    })
     
     return NextResponse.json(
       {
-        taskRequisition,
+        requisitionId: res.requisitionId,
       },
       {
         status: 201,
@@ -67,11 +70,12 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   const url = new URL(req.url);
   const requisitionId = url.searchParams.get('requisitionId');
-  const { organizationId, taskId, quantity } = await req.json() as 
+  const res = (await req.json()) as 
   {
     organizationId: string,
     taskId: string,
     quantity: number,
+    joined: number,
   };
   
   if (!requisitionId) {
@@ -86,15 +90,16 @@ export async function PUT(req: NextRequest) {
   }
   
   try {
-    const [taskRequisition] = await db.update(TaskRequisition).set({
-      organizationId,
-      taskId,
-      quantity,
+    await db.update(TaskRequisition).set({
+      organizationId: res.organizationId,
+      taskId: res.taskId,
+      quantity: res.quantity,
+      joined: res.joined,
     }).where(eq(TaskRequisition.requisitionId, requisitionId)).returning();
     
     return NextResponse.json(
       {
-        taskRequisition,
+        requisitionId,
       },
       {
         status: 200,
@@ -113,39 +118,20 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const url = new URL(req.url);
-  const requisitionId = url.searchParams.get('requisitionId');
-  
-  if (!requisitionId) {
-    return NextResponse.json(
-      {
-        error: 'Requisition ID is required',
-      },
-      {
-        status: 400,
-      }
-    );
-  }
-  
   try {
-    await db.delete(TaskRequisition).where(eq(TaskRequisition.requisitionId, requisitionId)).execute();
-    
-    return NextResponse.json(
-      {
-        message: `Task requisition ${requisitionId} deleted`,
-      },
-      {
-        status: 200,
-      }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error,
-      },
-      {
-        status: 400,
-      }
-    );
+    const url = new URL(req.url);
+    const requisitionId = url.searchParams.get('requisitionId');
+
+    if (requisitionId) {
+        await db.delete(TaskRequisition).where(eq(TaskRequisition.requisitionId, requisitionId)).execute();
+        return NextResponse.json({ message: 'Task Requisition deleted successfully' });
+    } else {
+        return NextResponse.json({ error: 'Invalid requisitionId' }, { status: 400 });
+    }
+} catch (error) {
+  if (error instanceof Error) {
+    return NextResponse.json(error.message);
   }
+    return NextResponse.json({ error: 'Failed to delete task requisition' }, { status: 500 });
+}
 }
