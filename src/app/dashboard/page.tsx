@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function BoardPage() {
   return (
@@ -81,9 +82,12 @@ export default function BoardPage() {
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm">
-                  Ver mais <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+
+                <Link href={`/quests/${quest}`}>
+                  <Button size="sm">
+                    Ver mais <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </Card>
               <div className="p-2" />
             </>
