@@ -27,31 +27,33 @@ export default async function HomePage() {
 
   return (
     <main className="bg-onboard flex h-screen flex-col items-center justify-center bg-cover bg-center">
-      <div className="flex h-3/5 w-1/2 rounded-3xl">
-        <div className="flex h-full w-full flex-col items-center justify-center rounded-l-3xl bg-primary px-12">
-          <p className="mb-4 text-3xl text-white">Seu Poder de Mudar o Mundo</p>
-          <p className="mb-4 text-justify text-lg text-white">
+      <div className="flex max-sm:flex-col 2xl:h-3/5 2xl:w-1/2 md:h-1/2 md:w-1/3 rounded-3xl max-sm:h-2/3 items-center">
+        <div className="flex max-sm:h-2/3 h-full max-sm:w-[90%] w-2/3 flex-col items-center justify-center max-sm:rounded-t-3xl bg-primary px-12">
+          <p className="mb-4 2xl:text-3xl text-white md:text-md">
+            Seu Poder de Mudar o Mundo
+          </p>
+          <p className="lg:mb-4 text-justify 2xl:text-lg text-white max-sm:text-sm">
             Você já imaginou o impacto que uma única ação pode ter? Em momentos
             de crise, quando desastres abalam comunidades, sua solidariedade se
             torna uma força transformadora. Cada habilidade que você possui,
             cada hora que você pode doar, tem o poder de mudar vidas.
           </p>
-          <p className="text-justify text-lg text-white">
+          <p className="text-justify 2xl:text-lg max-sm:text-sm text-white">
             Nossa plataforma torna mais fácil do que nunca ser um herói do
             cotidiano. Seja limpando áreas afetadas, distribuindo suprimentos ou
             oferecendo apoio, suas ações criam ondas de esperança. Junte-se a
             nós hoje e descubra o herói que existe em você!
           </p>
         </div>
-        <div className="flex h-full w-2/3 flex-col items-center justify-center rounded-r-3xl border px-12">
+        <div className="flex max-sm:h-1/2 h-full max-sm:w-[90%] w-2/3 flex-col items-center justify-center max-sm:rounded-b-3xl border px-12">
           <SignedOut>
             <Image
               src={Savepointlogo}
               alt="Descrição da Imagem"
               width={207}
-              className="mb-20 pt-28"
+              className="md:mb-20 md:pt-28 max-sm:mb-5 max-sm:pt-5"
             />
-            <p className="mb-10 text-xl font-bold">Boas Vindas</p>
+            <p className="mb-10 max-sm:mb-5 text-xl font-bold">Boas Vindas</p>
             <SignInButton>
               <Button className="bg-ghost rounded-full border-2 border-primary text-primary hover:text-white">
                 <Image
@@ -73,3 +75,4 @@ export default async function HomePage() {
     </main>
   );
 }
+

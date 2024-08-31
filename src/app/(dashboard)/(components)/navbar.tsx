@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export function Navbar() {
   return (
-    <aside className="w-60 bg-secondary">
+    <aside className="w-60 bg-card">
       <div className="p-4">
         <Image
           src="/savepoint-logo.png"
