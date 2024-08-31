@@ -29,6 +29,12 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { possibleTags } from "@/app/onboarding/voluntario/page";
+import { getPreviousUrl } from "@/lib/navigation";
+import { useRouter } from "next/navigation";
+import * as z from "zod";
+import { Urgency } from "@/enums/urgency.enum";
+import { auth } from "@clerk/nextjs/server";
+import { getUserByClerkId } from "@/lib/getUserByClerkId";
 
 // Definição dos tipos para o formulário
 interface FormData {
@@ -41,16 +47,56 @@ interface FormData {
   voluntarios: number;
 }
 
-const priorities = ["Low", "Medium", "High"];
+export const priorities: Record<number, string> = {
+  [Urgency.Urgente]: "Urgente",
+  [Urgency.Alto]: "Alta",
+  [Urgency.Moderado]: "Moderado",
+  [Urgency.Baixo]: "Baixa",
+};
 const cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
 const states = ["NY", "CA", "IL", "TX", "AZ"];
 
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "O nome da organização deve ter pelo menos 2 caracteres.",
+  }),
+});
+
 const QuestForm: React.FC = () => {
+
+
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
   const form = useForm<FormData>({ defaultValues: { habilidades: [] } });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
-  };
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values)
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/task", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create task");
+      }
+
+      const data = await response.json();
+      console.log("Ação criada:", data);
+
+      router.push("/quests");
+    } catch (error) {
+      console.error("Error creating organization:", error);
+      // Handle error (e.g., show an error message)
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
@@ -92,12 +138,12 @@ const QuestForm: React.FC = () => {
                     <FormField
                       control={form.control}
                       name="name"
-                      rules={{ required: "Name is required" }}
+                      rules={{ required: "Nome é obrigatório" }}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Nome da Ação</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter name" {...field} />
+                            <Input placeholder="Nome" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -107,7 +153,7 @@ const QuestForm: React.FC = () => {
                     <FormField
                       control={form.control}
                       name="priority"
-                      rules={{ required: "Priority is required" }}
+                      rules={{ required: "Prioridade é obrigatória" }}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Prioridade</FormLabel>
@@ -117,16 +163,16 @@ const QuestForm: React.FC = () => {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select priority" />
+                                <SelectValue placeholder="Prioridade" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {priorities.map((priority) => (
+                              {Object.entries(priorities).map(([key, value]) => (
                                 <SelectItem
-                                  key={priority}
-                                  value={priority.toLowerCase()}
+                                  key={key}
+                                  value={value.toLowerCase()}
                                 >
-                                  {priority}
+                                  {value}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -141,7 +187,7 @@ const QuestForm: React.FC = () => {
                     <FormField
                       control={form.control}
                       name="city"
-                      rules={{ required: "City is required" }}
+                      rules={{ required: "Cidade é obrigatório" }}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Cidade</FormLabel>
@@ -151,7 +197,7 @@ const QuestForm: React.FC = () => {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select city" />
+                                <SelectValue placeholder="Cidade" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -170,7 +216,7 @@ const QuestForm: React.FC = () => {
                     <FormField
                       control={form.control}
                       name="state"
-                      rules={{ required: "State is required" }}
+                      rules={{ required: "Estado é obrigatório" }}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Estado</FormLabel>
@@ -180,7 +226,7 @@ const QuestForm: React.FC = () => {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select state" />
+                                <SelectValue placeholder="Estado" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -200,13 +246,13 @@ const QuestForm: React.FC = () => {
                   <FormField
                     control={form.control}
                     name="description"
-                    rules={{ required: "Description is required" }}
+                    rules={{ required: "Descrição é obrigatório" }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Descrição</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Enter description"
+                            placeholder="Descrição"
                             {...field}
                           />
                         </FormControl>
@@ -292,8 +338,9 @@ const QuestForm: React.FC = () => {
                     )}
                   />
 
-                  <Button type="submit" className="rounded-full">
-                    Registrar
+                  <Button type="submit" className="rounded-full" disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Salvando..." : "Salvar"}
                   </Button>
                 </form>
               </Form>

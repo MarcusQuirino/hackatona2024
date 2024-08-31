@@ -55,7 +55,7 @@ export default async function QuestPage({
   const quest = await getQuest(params.questId);
 
   if (!quest) {
-    return <div>Quest not found</div>;
+    return <div>Ação não encontrada</div>;
   }
 
   const { userId } = auth();

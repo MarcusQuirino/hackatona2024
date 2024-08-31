@@ -1,8 +1,30 @@
-import { Home, BookOpen, Settings, ListChecks, PersonStanding, UserRound } from "lucide-react";
+import {
+  Home,
+  BookOpen,
+  Settings,
+  ListChecks,
+  PersonStanding,
+  UserRound,
+  CirclePlus,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { auth } from "@clerk/nextjs/server";
+import { getUserByClerkId } from "@/lib/getUserByClerkId";
 
-export function Navbar() {
+export async function Navbar() {
+  const { userId } = auth();
+
+  if (!userId) {
+    return;
+  }
+
+  const user = await getUserByClerkId(userId);
+
+  if (!user) {
+    return;
+  }
+
   return (
     <aside className="w-60 bg-card">
       <div className="p-4">
@@ -43,6 +65,17 @@ export function Navbar() {
               Perfil
             </Link>
           </li>
+          {user && user.role === 1 && (
+            <li>
+              <Link
+                href="/quests/form"
+                className="flex items-center rounded px-4 py-2 hover:bg-primary/10"
+              >
+                <CirclePlus className="mr-2 h-5 w-5" />
+                Cadastrar Ação
+              </Link>
+            </li>
+          )}
           {/* <li>
             <Link
               href="/configuracoes"

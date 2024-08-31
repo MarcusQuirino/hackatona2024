@@ -1,13 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getUserByClerkId } from "@/lib/getUserByClerkId";
 import { db } from "@/server/db";
-import { Task } from "@/server/db/schema";
+import { Task, UserOrganization } from "@/server/db/schema";
+import { auth } from "@clerk/nextjs/server";
 import { randomUUID } from "crypto";
 import { eq, or } from "drizzle-orm";
 import { and } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(request: Request) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return;
+  }
+
+  const user = await getUserByClerkId(userId);
+
+  if (!user) {
+    return;
+  }
+
+  console.log("User:", user.userId);
+
+  // const response = await fetch(`/api/user-organization?userId=${user.userId}`);
+
+  // console.log("Response:", response);
+
   const res = (await request.json()) as {
     organizationId: string;
     name: string;
