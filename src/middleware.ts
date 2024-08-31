@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isDashboardRoute = createRouteMatcher(["/sadfasdf(.*)"]);
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+// const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 export default clerkMiddleware((auth, req) => {
   // Restrict dashboard routes to signed in users
