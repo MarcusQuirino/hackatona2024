@@ -1,17 +1,27 @@
-# Xanflis Template
+# Savepoint
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+descrição do projeto
 
-## Feat:
+# integrantes
 
-- [Next.js](https://nextjs.org)
-- [Clerk](https://clerk.com/)
-- [Drizzle](https://orm.drizzle.team)
-- [Shadcn Ui](https://ui.shadcn.com/)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Resend + React Email](https://resend.com)
-- [Turso](https://turso.tech)
+- Marcus Filipe
+- João Pedro
+- Pablo Montiel
+- Marcelo Boeira
+- Carol Lewandowski
+- Bianca Alves
 
-## How do I deploy this?
+# stack
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- next.js
+- tailwind
+- shadcn
+- clerk
+- resend
+- turso
+- vercel
+
+# Patrocinadores
+
+- Southlike Software
+- RedBull
