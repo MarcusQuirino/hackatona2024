@@ -12,8 +12,11 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import QuestList from "@/components/quest-list";
 
 export default function BoardPage() {
+
+  const quests = [1, 2, 3, 4, 5];
   return (
     <main className="flex h-[calc(100vh-5rem)] flex-col items-center gap-8 p-8">
       <div className="flex w-full max-w-4xl justify-center gap-8">
@@ -61,39 +64,7 @@ export default function BoardPage() {
         <Input type="text" placeholder="Enter text here" className="w-1/2" />
       </div>
 
-      <div className="w-full max-w-4xl">
-        <ScrollArea className="flex h-[300px] w-full flex-col gap-4">
-          {[1, 2, 3, 4, 5].map((quest) => (
-            <>
-              <Card
-                key={quest}
-                className="flex items-center justify-between p-4"
-              >
-                <div className="flex items-center space-x-6">
-                  <UserRoundCheck size={24} />
-                  <Badge
-                    variant="outline"
-                    className="w-24 justify-center"
-                  >{`Priority ${quest}`}</Badge>
-                  <div className="flex items-center space-x-4">
-                    <h4 className="font-semibold">Quest Title {quest}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Location: Area {quest}
-                    </p>
-                  </div>
-                </div>
-
-                <Link href={`/quests/${quest}`}>
-                  <Button size="sm">
-                    Ver mais <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </Card>
-              <div className="p-2" />
-            </>
-          ))}
-        </ScrollArea>
-      </div>
+      <QuestList quests = {quests} />
     </main>
   );
 }
