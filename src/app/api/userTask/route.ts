@@ -5,14 +5,73 @@ import { UserTask } from '@/server/db/schema';
 import { and, eq, sql } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
+    const url = new URL(req.url);
+    const userId = url.searchParams.get('userId');
+    const type = url.searchParams.get('type');
+
     try {
-        const users = await db.select().from(UserTask).all();
-        return NextResponse.json(users);
+        if (userId && type) {
+            let result;
+
+            switch (type) {
+                case 'completed':
+                    result = await db
+                        .select({ count: sql`COUNT(*)` })
+                        .from(UserTask)
+                        .where(and(eq(UserTask.userId, userId), sql`${UserTask.finishedDate} IS NOT NULL`))
+                        .execute();
+                    return NextResponse.json(result[0]?.count || 0);
+
+                case 'in-progress':
+                    result = await db
+                        .select({ count: sql`COUNT(*)` })
+                        .from(UserTask)
+                        .where(and(eq(UserTask.userId, userId), sql`${UserTask.finishedDate} IS NULL`))
+                        .execute();
+                    return NextResponse.json(result[0]?.count || 0);
+
+                case 'yearly':
+                    const currentYear = new Date().getFullYear();
+                    result = await db
+                        .select({ count: sql`COUNT(*)` })
+                        .from(UserTask)
+                        .where(
+                            and(
+                                eq(UserTask.userId, userId),
+                                sql`strftime('%Y', ${UserTask.finishedDate}) = ${currentYear}`
+                            )
+                        )
+                        .execute();
+                    return NextResponse.json(result[0]?.count || 0);
+
+                case 'all-count':
+                    result = await db
+                        .select({ count: sql`COUNT(*)` })
+                        .from(UserTask)
+                        .where(eq(UserTask.userId, userId))
+                        .execute();
+                    return NextResponse.json(result[0]?.count || 0);
+
+                case 'all':
+                    result = await db
+                        .select()
+                        .from(UserTask)
+                        .where(eq(UserTask.userId, userId))
+                        .execute();
+                    return NextResponse.json(result);
+
+                default:
+                    return NextResponse.json({ error: 'Invalid type parameter' }, { status: 400 });
+            }
+        } else {
+            return NextResponse.json({ error: 'userId and type are required' }, { status: 400 });
+        }
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch user tasks' });
+        return NextResponse.json({ error: 'Failed to fetch user tasks' }, { status: 500 });
     }
 }
+
 
 export async function POST(req: NextRequest) {
     const res = (await req.json()) as {
@@ -80,6 +139,7 @@ export async function DELETE(req: NextRequest) {
         const taskId = url.searchParams.get('taskId');
 
         if (userId && organizationId && taskId) {
+            // Confirme que `organizationId` é necessário ou ajuste conforme a lógica da sua aplicação
             await db.delete(UserTask).where(
                 and(
                     eq(UserTask.userId, userId),
