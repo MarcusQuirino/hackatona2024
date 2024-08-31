@@ -1,17 +1,20 @@
-import { db } from "@/server/db"
-import { Organization } from "@/server/db/schema"
-import { randomUUID } from "crypto"
-import { eq } from "drizzle-orm"
-import { NextResponse, type NextRequest } from "next/server"
+import { db } from "@/server/db";
+import { Organization } from "@/server/db/schema";
+import { randomUUID } from "crypto";
+import { eq } from "drizzle-orm";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(request: Request) {
-  const { name } = await request.json() as { name: string }
+  const { name } = (await request.json()) as { name: string };
 
   try {
-    const [ organization ] = await db.insert(Organization).values({
-      organizationId: randomUUID(),
-      name,
-    }).returning()
+    const [organization] = await db
+      .insert(Organization)
+      .values({
+        organizationId: randomUUID(),
+        name,
+      })
+      .returning();
 
     return NextResponse.json(
       {
@@ -19,9 +22,8 @@ export async function POST(request: Request) {
       },
       {
         status: 201,
-      }
-    )    
-
+      },
+    );
   } catch (error) {
     return NextResponse.json(
       {
@@ -29,22 +31,22 @@ export async function POST(request: Request) {
       },
       {
         status: 400,
-      }
-    )
+      },
+    );
   }
 }
 
 export async function GET() {
   try {
-    const organizations = await db.query.Organization.findMany()
+    const organizations = await db.query.Organization.findMany();
     return NextResponse.json(
       {
         organizations,
       },
       {
         status: 200,
-      }
-    )
+      },
+    );
   } catch (error) {
     return NextResponse.json(
       {
@@ -52,35 +54,36 @@ export async function GET() {
       },
       {
         status: 400,
-      }
-    )
+      },
+    );
   }
 }
 
 export async function PUT(req: NextRequest) {
   const url = new URL(req.url);
-  const organizationId = url.searchParams.get('organizationId');
-  
-  const res = (await req.json()) as { name: string }
+  const organizationId = url.searchParams.get("organizationId");
 
-  console.log('organizationId');
+  const res = (await req.json()) as { name: string };
+
+  console.log("organizationId");
 
   if (!organizationId) {
     return NextResponse.json(
       {
-        error: 'Organization ID is required',
+        error: "Organization ID is required",
       },
       {
         status: 400,
-      }
-    )
+      },
+    );
   }
 
   try {
-    const [organization] = await db.update(Organization)
+    const [organization] = await db
+      .update(Organization)
       .set({ name: res.name })
       .where(eq(Organization.organizationId, organizationId))
-      .returning()
+      .returning();
 
     return NextResponse.json(
       {
@@ -88,8 +91,8 @@ export async function PUT(req: NextRequest) {
       },
       {
         status: 200,
-      }
-    )
+      },
+    );
   } catch (error) {
     return NextResponse.json(
       {
@@ -97,30 +100,31 @@ export async function PUT(req: NextRequest) {
       },
       {
         status: 400,
-      }
-    )
+      },
+    );
   }
 }
 
 export async function DELETE(req: NextRequest) {
   const url = new URL(req.url);
-  const organizationId = url.searchParams.get('organizationId');
+  const organizationId = url.searchParams.get("organizationId");
 
   if (!organizationId) {
     return NextResponse.json(
       {
-        error: 'Organization ID is required',
+        error: "Organization ID is required",
       },
       {
         status: 400,
-      }
-    )
+      },
+    );
   }
 
   try {
-    await db.delete(Organization)
+    await db
+      .delete(Organization)
       .where(eq(Organization.organizationId, organizationId))
-      .returning()
+      .returning();
 
     return NextResponse.json(
       {
@@ -128,8 +132,8 @@ export async function DELETE(req: NextRequest) {
       },
       {
         status: 200,
-      }
-    )
+      },
+    );
   } catch (error) {
     return NextResponse.json(
       {
@@ -137,8 +141,7 @@ export async function DELETE(req: NextRequest) {
       },
       {
         status: 400,
-      }
-    )
+      },
+    );
   }
 }
-

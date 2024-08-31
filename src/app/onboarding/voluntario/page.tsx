@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { getPreviousUrl, setPreviousUrl } from "@/lib/navigation";
 import Image from "next/image";
 import {
   Card,
@@ -9,60 +11,57 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Qualities } from "@/enums/qualities.enum";
 
-const possibleTags = {
-  primeiros_socorros: "Primeiros Socorros",
-  resgate_aquatico: "Resgate Aquático",
-  combate_incendios: "Combate a Incêndios",
-  operacao_maquinario_pesado: "Operação de Maquinário Pesado",
-  logistica_distribuicao: "Logística e Distribuição",
-  gerenciamento_suprimentos: "Gerenciamento de Suprimentos",
-  atendimento_psicologico: "Atendimento Psicológico",
-  assistencia_medica: "Assistência Médica",
-  enfermagem: "Enfermagem",
-  comunicacao_crise: "Comunicação de Crise",
-  traducao_interpretacao: "Tradução e Interpretação",
-  coordenacao_equipes: "Coordenação de Equipes",
-  avaliacao_estrutural: "Avaliação Estrutural",
-  purificacao_agua: "Purificação de Água",
-  construcao_civil: "Construção Civil",
-  operacao_drones: "Operação de Drones",
-  analise_dados_geograficos: "Análise de Dados Geográficos (GIS)",
-  cuidados_animais: "Cuidados com Animais",
-  agricultura_manejo_solo: "Agricultura e Manejo do Solo",
-  eletricidade_reparos: "Eletricidade e Reparos Elétricos",
-  encanamento_sistemas_hidraulicos: "Encanamento e Sistemas Hidráulicos",
-  cozinha_larga_escala: "Cozinha em Larga Escala",
-  telecomunicacoes_emergencia: "Telecomunicações de Emergência",
-  operacao_equipamentos_radio: "Operação de Equipamentos de Rádio",
-  direcao_veiculos_pesados: "Direção de Veículos Pesados",
-  navegacao_orientacao: "Navegação e Orientação",
-  educacao_treinamento: "Educação e Treinamento",
-  limpeza_ambiental: "Limpeza Ambiental",
-  reciclagem_gestao_residuos: "Reciclagem e Gestão de Resíduos",
-  costura_reparos_vestuario: "Costura e Reparos de Vestuário",
-  carpintaria: "Carpintaria",
-  servicos_juridicos: "Serviços Jurídicos",
-  contabilidade_gestao_financeira: "Contabilidade e Gestão Financeira",
-  fotografia_documentacao: "Fotografia e Documentação",
-  programacao_desenvolvimento_software:
-    "Programação e Desenvolvimento de Software",
-  gestao_midias_sociais: "Gestão de Mídias Sociais",
-  aconselhamento_espiritual: "Aconselhamento Espiritual",
-  cuidados_geriatricos: "Cuidados Geriátricos",
-  cuidados_pediatricos: "Cuidados Pediátricos",
-  seguranca_vigilancia: "Segurança e Vigilância",
+const possibleTags: Record<number, string> = {
+  [Qualities.Desenvolvedor]: "Desenvolvedor",
+  [Qualities.PilotoBarco]: "Piloto de Barco",
+  [Qualities.PilotoCarro]: "Piloto de Carro",
+  [Qualities.PilotoMoto]: "Piloto de Moto",
+  [Qualities.Medico]: "Médico",
+  [Qualities.Enfermeiro]: "Enfermeiro",
+  [Qualities.Bombeiro]: "Bombeiro",
+  [Qualities.Policial]: "Policial",
+  [Qualities.Professor]: "Professor",
+  [Qualities.Engenheiro]: "Engenheiro",
+  [Qualities.Eletricista]: "Eletricista",
+  [Qualities.Encanador]: "Encanador",
+  [Qualities.Pintor]: "Pintor",
+  [Qualities.Pedreiro]: "Pedreiro",
+  [Qualities.Voluntario]: "Voluntário",
+  [Qualities.Logistico]: "Logístico",
 };
 
-export default function OnboardingPage() {
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+export default function VoluntarioPage() {
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const toggleTag = (tag: string) => {
+  useEffect(() => {
+    const previousUrl = getPreviousUrl();
+    console.log("User came from:", previousUrl);
+    setPreviousUrl(pathname);
+  }, [pathname]);
+
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+
+  const toggleTag = (tag: number) => {
     setSelectedTags((prevTags) =>
       prevTags.includes(tag)
         ? prevTags.filter((t) => t !== tag)
         : [...prevTags, tag],
     );
+  };
+
+  const handleConcluir = () => {
+    const queryParams = new URLSearchParams();
+    selectedTags.forEach((tag) =>
+      queryParams.append("qualities", tag.toString()),
+    );
+    console.log(
+      "Selected qualities added to query params:",
+      queryParams.toString(),
+    );
+    router.push(`/onboarding/info?${queryParams.toString()}`);
   };
 
   return (
@@ -90,9 +89,9 @@ export default function OnboardingPage() {
             {Object.entries(possibleTags).map(([key, value]) => (
               <button
                 key={key}
-                onClick={() => toggleTag(key)}
+                onClick={() => toggleTag(Number(key))}
                 className={`rounded-full border border-primary px-3 py-1 text-sm font-semibold transition-colors duration-200 ${
-                  selectedTags.includes(key)
+                  selectedTags.includes(Number(key))
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
@@ -103,7 +102,7 @@ export default function OnboardingPage() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button>Concluir</Button>
+          <Button onClick={handleConcluir}>Concluir</Button>
         </CardFooter>
       </Card>
     </div>

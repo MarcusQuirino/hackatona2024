@@ -7,6 +7,12 @@ import {
   SignUpButton,
   SignedOut,
 } from "@clerk/nextjs";
+import {
+  GoogleOneTap,
+  SignInButton,
+  SignUpButton,
+  SignedOut,
+} from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { getUserByClerkId } from "@/lib/getUserByClerkId";

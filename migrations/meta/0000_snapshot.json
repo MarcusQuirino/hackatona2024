@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c1682f0e-417f-447f-9c04-dd701349bcfd",
+  "id": "2e06ba77-19ad-408d-8eb3-616e2762e358",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Organization": {
@@ -108,6 +108,20 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -159,14 +173,21 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "joined": {
+          "name": "joined",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "TaskRequisition_organization_id_Task_organization_id_fk": {
-          "name": "TaskRequisition_organization_id_Task_organization_id_fk",
+        "TaskRequisition_organization_id_Organization_organization_id_fk": {
+          "name": "TaskRequisition_organization_id_Organization_organization_id_fk",
           "tableFrom": "TaskRequisition",
-          "tableTo": "Task",
+          "tableTo": "Organization",
           "columnsFrom": [
             "organization_id"
           ],
@@ -212,7 +233,7 @@
         },
         "qualities": {
           "name": "qualities",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -238,6 +259,20 @@
           "notNull": true,
           "autoincrement": false
         },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "integer",
@@ -256,6 +291,56 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "UserOrganization": {
+      "name": "UserOrganization",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "UserOrganization_user_id_User_user_id_fk": {
+          "name": "UserOrganization_user_id_User_user_id_fk",
+          "tableFrom": "UserOrganization",
+          "tableTo": "User",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "UserOrganization_organization_id_Organization_organization_id_fk": {
+          "name": "UserOrganization_organization_id_Organization_organization_id_fk",
+          "tableFrom": "UserOrganization",
+          "tableTo": "Organization",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "organization_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -287,15 +372,17 @@
           "name": "status",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false,
+          "autoincrement": false,
+          "default": 1
         },
         "join_date": {
           "name": "join_date",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(unixepoch())"
         },
         "finished_date": {
           "name": "finished_date",
@@ -320,10 +407,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "UserTask_organization_id_Task_organization_id_fk": {
-          "name": "UserTask_organization_id_Task_organization_id_fk",
+        "UserTask_organization_id_Organization_organization_id_fk": {
+          "name": "UserTask_organization_id_Organization_organization_id_fk",
           "tableFrom": "UserTask",
-          "tableTo": "Task",
+          "tableTo": "Organization",
           "columnsFrom": [
             "organization_id"
           ],
