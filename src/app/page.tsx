@@ -53,7 +53,7 @@ export default async function HomePage() {
             />
             <p className="mb-10 text-xl font-bold">Boas Vindas</p>
             <SignInButton>
-              <Button className="bg-ghost rounded-full border-2 border-primary text-primary">
+              <Button className="bg-ghost rounded-full border-2 border-primary text-primary hover:text-white">
                 <Image
                   src={GoogleLogo}
                   alt="Descrição da Imagem"
