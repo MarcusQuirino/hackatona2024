@@ -1,136 +1,95 @@
-import { db } from "@/server/db"
-import { Organization } from "@/server/db/schema"
-import { randomUUID } from "crypto"
-import { eq } from "drizzle-orm"
-import { NextResponse, type NextRequest } from "next/server"
+// src/api/user/route.ts
+import { NextApiRequest, NextApiResponse } from 'next';
+import { db } from '../../../server/db';
+import { User } from '@/server/db/schema';
+import { eq, sql } from 'drizzle-orm';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
-  const { name } = await request.json() as { name: string }
-
-  try {
-    const [ organization ] = await db.insert(Organization).values({
-      organizationId: randomUUID(),
-      name,
-    }).returning()
-
-    return NextResponse.json(
-      {
-        organization,
-      },
-      {
-        status: 201,
-      }
-    )    
-
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error,
-      },
-      {
-        status: 400,
-      }
-    )
-  }
+export async function GET(req: NextRequest, res: NextResponse) {
+    try {
+        const users = await db.select().from(User).all();
+        return NextResponse.json(users);
+    } catch (error) {
+        return NextResponse.json({ error: 'Failed to fetch users' });
+    }
 }
 
-export async function GET() {
-  try {
-    const organizations = await db.query.Organization.findMany()
-    return NextResponse.json(
-      {
-        organizations,
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error,
-      },
-      {
-        status: 400,
-      }
-    )
-  }
+export async function POST(req: NextRequest) {
+    const res = (await req.json()) as {
+        userId: string;
+        name: string;
+        qualities: number[];
+        email: string;
+        role: number;
+        state: string;
+        city: string;
+    }
+    try {
+        await db.insert(User).values({
+            userId: res.userId,
+            name: res.name,
+            qualities: JSON.stringify(res.qualities),
+            email: res.email,
+            role: res.role,
+            state: res.state,
+            city: res.city
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            return NextResponse.json(error.message);
+        } 
+        return NextResponse.json({ error: 'Failed to create user' });
+    }
 }
 
-export async function PUT(request: Request, req: NextRequest) {
-  const organizationId = req.nextUrl.searchParams.get('organizationId');
-  const { name } = await request.json() as { organizationId: string, name: string }
+export async function PUT(req: NextRequest) {
+    const res = (await req.json()) as {
+        userId: string;
+        name: string;
+        qualities: number[];
+        email: string;
+        role: number;
+        state: string;
+        city: string;
+    };
 
-  if (!organizationId) {
-    return NextResponse.json(
-      {
-        error: 'Organization ID is required',
-      },
-      {
-        status: 400,
-      }
-    )
-  }
+    try {
+        const url = new URL(req.url);
+        const userId = url.searchParams.get('userId');
 
-  try {
-    const [organization] = await db.update(Organization)
-      .set({ name })
-      .where(eq(Organization.organizationId, organizationId))
-      .returning()
+        if (userId) {
+            await db.update(User)
+                .set({
+                    name: res.name,
+                    qualities: JSON.stringify(res.qualities),
+                    email: res.email,
+                    role: res.role,
+                    state: res.state,
+                    city: res.city
+                })
+                .where(eq(User.userId, userId));
 
-    return NextResponse.json(
-      {
-        organization,
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error,
-      },
-      {
-        status: 400,
-      }
-    )
-  }
+            return NextResponse.json({ data: 'updated' });
+        } else {
+            return NextResponse.json({ error: 'userId is required' });
+        }
+    } catch (error) {
+        return NextResponse.json({ error: 'Failed to update user' });
+    }
 }
 
 export async function DELETE(req: NextRequest) {
-    const organizationId = req.nextUrl.searchParams.get('organizationId');
+    try {
+        const url = new URL(req.url);
+        const userId = url.searchParams.get('userId');
 
-  if (!organizationId) {
-    return NextResponse.json(
-      {
-        error: 'Organization ID is required',
-      },
-      {
-        status: 400,
-      }
-    )
-  }
-
-  try {
-    await db.delete(Organization).where(eq(Organization.organizationId, organizationId))
-
-    return NextResponse.json(
-      {
-        message: `Organization ${organizationId} deleted`
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error,
-      },
-      {
-        status: 400,
-      }
-    )
-  }
+        if (userId) {
+            await db.delete(User).where(eq(User.userId, userId)).execute();
+            return NextResponse.json({ message: 'User deleted successfully' });
+        } else {
+            return NextResponse.json({ error: 'Invalid userId' }, { status: 400 });
+        }
+    } catch (error) {
+        return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
+    }
 }

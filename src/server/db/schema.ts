@@ -5,10 +5,12 @@ import { relations, sql } from 'drizzle-orm';
 export const User = sqliteTable('User', {
     userId: text('user_id').primaryKey().notNull(),
     name: text('name').notNull(),
-    qualities: integer('qualities').notNull(),
+    qualities: text('qualities').notNull(),
     email: text('email').notNull(),
-    clerkId: text('clerk_id').notNull(),
+    clerkId: text('clerk_id'),
     role: integer('role').notNull(),
+    state: text("state").notNull(),
+    city: text("city").notNull(),
     createdAt: int("created_at", { mode: "timestamp" }).default(
       sql`(unixepoch())`,
     ),
@@ -42,7 +44,8 @@ export const TaskRequisition = sqliteTable('TaskRequisition', {
     organizationId: text('organization_id').notNull().references(() => Task.organizationId),
     taskId: text('task_id').notNull().references(() => Task.taskId),
     requisitionId: text('requisition_id').notNull(),
-    quantity: integer('quantity').notNull()
+    quantity: integer('quantity').notNull(),
+    joined: integer('').notNull()
 });
 
 export const UserTask = sqliteTable('UserTask', {
