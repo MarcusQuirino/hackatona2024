@@ -1,5 +1,6 @@
 export enum Urgency {
-    Alto = 1,
-    Medio = 2,
-    Baixo = 3
+    Urgente = 1,
+    Alto = 2,
+    Moderado = 3,
+    Baixo = 4
 }

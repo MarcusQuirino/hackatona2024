@@ -70,7 +70,8 @@ export default function InfoPage() {
 
     if (previousUrl === "voluntario" || previousUrl === "organizacao") {
       try {
-        const response = await fetch("/api/user", {
+        // Create user
+        const userResponse = await fetch("/api/user", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -79,24 +80,61 @@ export default function InfoPage() {
             name: values.name,
             city: values.city,
             role: previousUrl === "voluntario" ? 2 : 1,
-            // Add other required fields with default values or empty strings
             qualities: selectedQualities,
             email: "",
             state: "",
           }),
         });
 
-        if (!response.ok) {
+        if (!userResponse.ok) {
           throw new Error("Failed to create user");
         }
 
-        const result = await response.json();
-        console.log("User created:", result);
+        const userResult = await userResponse.json();
+        console.log("User created:", userResult);
+
+        // Create user organization
+        if (previousUrl === "organizacao") {
+          const organizationResponse = await fetch("/api/organization", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: values.name,
+            }),
+          });
+
+          if (!organizationResponse.ok) {
+            throw new Error("Failed to create organization");
+          }
+
+          const organizationResult = await organizationResponse.json();
+          console.log("Organization created:", organizationResult);
+
+          // Link user to organization
+          const userOrgResponse = await fetch("/api/user-organization", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userResult.userId,
+              organizationId: organizationResult.organization.organizationId,
+            }),
+          });
+
+          if (!userOrgResponse.ok) {
+            throw new Error("Failed to link user to organization");
+          }
+
+          console.log("User linked to organization");
+        }
 
         // Use router.push for client-side navigation
         router.push("/dashboard");
       } catch (error) {
-        console.error("Error creating user:", error);
+        console.error("Error in form submission:", error);
         // Handle error (e.g., show error message to user)
       }
     } else {

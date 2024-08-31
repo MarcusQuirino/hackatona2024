@@ -1,7 +1,7 @@
 // src/api/user/route.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../server/db";
-import { User } from "@/server/db/schema";
+import { User, UserOrganization } from "@/server/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";

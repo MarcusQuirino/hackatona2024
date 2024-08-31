@@ -9,5 +9,5 @@ export function ShowRoute() {
   const displayText =
   pathName.charAt(0).toUpperCase() + pathName.slice(1);
 
-  return <div className="text-xl font-semibold">{displayText}</div>;
+  return <div className="text-xl font-semibold text-primary">{displayText}</div>;
 }

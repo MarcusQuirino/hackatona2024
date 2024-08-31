@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Qualities } from "@/enums/qualities.enum";
 
-const possibleTags: Record<number, string> = {
+export const possibleTags: Record<number, string> = {
   [Qualities.Desenvolvedor]: "Desenvolvedor",
   [Qualities.PilotoBarco]: "Piloto de Barco",
   [Qualities.PilotoCarro]: "Piloto de Carro",
