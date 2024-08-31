@@ -95,6 +95,8 @@ export async function PUT(req: NextRequest) {
     qualities: string;
     urgency: number;
     status: number;
+    state: string;
+    city: string;
   };
 
   try {
@@ -111,6 +113,8 @@ export async function PUT(req: NextRequest) {
           qualities: res.qualities,
           urgency: res.urgency,
           status: res.status,
+          state: res.state,
+          city: res.city
         })
         .where(eq(Task.taskId, taskId));
 
