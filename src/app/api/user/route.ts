@@ -3,7 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../server/db';
 import { User } from '@/server/db/schema';
 import { eq, sql } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 
 export async function GET(req: NextRequest, res: NextResponse) {
     try {
@@ -16,7 +17,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
 export async function POST(req: NextRequest) {
     const res = (await req.json()) as {
-        userId: string;
         name: string;
         qualities: number[];
         email: string;
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
     try {
         await db.insert(User).values({
-            userId: res.userId,
+            userId: randomUUID(),
             name: res.name,
             qualities: JSON.stringify(res.qualities),
             email: res.email,
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
             state: res.state,
             city: res.city
         });
-        return NextResponse.json({message: "created"})
+        return NextResponse.json({ message: 'User created successfully' }, { status: 201 });
     } catch (error) {
         if (error instanceof Error) {
             return NextResponse.json(error.message);
