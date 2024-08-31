@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { PostThing } from "./(components)/post-thing";
+import { SignInButton, SignedOut } from "@clerk/nextjs";
 
 export default function HomePage() {
   return (
@@ -15,9 +14,6 @@ export default function HomePage() {
             <SignInButton />
           </Button>
         </SignedOut>
-        <SignedIn>
-          <PostThing />
-        </SignedIn>
       </div>
     </main>
   );
