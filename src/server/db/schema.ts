@@ -59,6 +59,11 @@ export const UserTask = sqliteTable('UserTask', {
     finishedDate: int('finished_date', { mode: 'timestamp' })
 });
 
+export const UserOrganization = sqliteTable('UserOrganization', {
+    userId: text('user_id').notNull().references(() => User.userId),
+    organizationId: text('organization_id').notNull().references(() => Organization.organizationId),
+});
+
 
 // Relações
 export const UserRelations = relations(User, ({ one, many }) => ({
@@ -98,4 +103,15 @@ export const UserTaskRelations = relations(UserTask, ({ one }) => ({
         fields: [UserTask.organizationId],
         references: [Organization.organizationId],
     }),
+}));
+
+export const UserOrganizationRelations = relations(UserOrganization, ({ one }) => ({
+    user: one(User, {
+        fields: [UserOrganization.userId],
+        references: [User.userId]
+    }),
+    organization: one(Organization, {
+        fields: [UserOrganization.organizationId],
+        references: [Organization.organizationId]
+    })
 }));
