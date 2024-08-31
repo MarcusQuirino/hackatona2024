@@ -31,8 +31,26 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <LayoutHeader />
-            {children}
+            <div className="flex min-h-screen flex-row">
+              <aside className="w-48 bg-secondary">
+                <nav className="p-4">
+                  <ul className="space-y-2">
+                    <li>
+                      <a
+                        href="/"
+                        className="block rounded px-4 py-2 hover:bg-primary/10"
+                      >
+                        Home
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </aside>
+              <div className="flex-1">
+                <LayoutHeader />
+                {children}
+              </div>
+            </div>
             <Toaster />
           </ThemeProvider>
         </body>
