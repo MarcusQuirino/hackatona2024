@@ -2,11 +2,11 @@ import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "@/components/theme-provider";
-import { LayoutHeader } from "./(components)/layout-header";
+import { LayoutHeader } from "./(dashboard)/(components)/layout-header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { type Metadata } from "next";
-import { Navbar } from "./(components)/navbar";
+import { Navbar } from "./(dashboard)/(components)/navbar";
 
 export const metadata: Metadata = {
   title: "Xanflis Template",
@@ -32,13 +32,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex min-h-screen flex-row">
-              <Navbar />
-              <div className="flex-1">
-                <LayoutHeader />
-                {children}
-              </div>
-            </div>
+            {children}
             <Toaster />
           </ThemeProvider>
         </body>
