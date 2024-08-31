@@ -1,5 +1,15 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { getPreviousUrl } from "@/lib/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { redirect } from "next/navigation";
+import * as z from "zod";
 import {
   Card,
   CardHeader,
@@ -8,11 +18,93 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "O nome deve ter pelo menos 2 caracteres.",
+  }),
+  city: z.string().min(2, {
+    message: "A cidade deve ter pelo menos 2 caracteres.",
+  }),
+});
+
 export default function InfoPage() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [previousUrl, setPreviousUrl] = useState<string | null>(null);
+  const [selectedQualities, setSelectedQualities] = useState<number[]>([]);
+
+  useEffect(() => {
+    const url = getPreviousUrl();
+    const path = url?.split("/");
+    const qualities = searchParams.getAll("qualities").map(Number);
+    console.log("Retrieved qualities:", qualities);
+    console.log("Previous URL:", url);
+    console.log("Path:", path);
+    setSelectedQualities(qualities);
+    setPreviousUrl(path?.[2] ?? null);
+  }, [searchParams]);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      city: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    console.log("Submitting form. User came from path:", previousUrl);
+
+    if (previousUrl === "voluntario" || previousUrl === "organizacao") {
+      try {
+        const response = await fetch("/api/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: values.name,
+            city: values.city,
+            role: previousUrl === "voluntario" ? 2 : 1,
+            // Add other required fields with default values or empty strings
+            qualities: selectedQualities,
+            email: "",
+            state: "",
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create user");
+        }
+
+        const result = await response.json();
+        console.log("User created:", result);
+
+        // Use router.push for client-side navigation
+        router.push("/dashboard");
+      } catch (error) {
+        console.error("Error creating user:", error);
+        // Handle error (e.g., show error message to user)
+      }
+    } else {
+      console.error("Invalid previous URL");
+      // Handle error (e.g., show error message to user)
+    }
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-4xl">
@@ -25,34 +117,53 @@ export default function InfoPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form>
-                <div className="grid w-full items-center gap-6">
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="name" className="text-lg">
-                      Nome Completo
-                    </Label>
-                    <Input
-                      id="name"
-                      placeholder="Digite seu nome completo"
-                      className="p-3 text-lg"
-                    />
-                  </div>
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="city" className="text-lg">
-                      Cidade
-                    </Label>
-                    <Input
-                      id="city"
-                      placeholder="Digite sua cidade"
-                      className="p-3 text-lg"
-                    />
-                  </div>
-                </div>
-              </form>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-6"
+                >
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-lg">Nome Completo</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Digite seu nome completo"
+                            className="p-3 text-lg"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-lg">Cidade</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Digite sua cidade"
+                            className="p-3 text-lg"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <CardFooter className="flex justify-end px-0">
+                    <Button type="submit" className="px-6 py-3 text-lg">
+                      Próximo
+                    </Button>
+                  </CardFooter>
+                </form>
+              </Form>
             </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button className="px-6 py-3 text-lg">Próximo</Button>
-            </CardFooter>
           </div>
           <div className="flex flex-1 flex-col items-center justify-center rounded-r-lg bg-primary p-6 text-white">
             <Image
