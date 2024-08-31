@@ -52,10 +52,11 @@ export const UserTask = sqliteTable('UserTask', {
     userId: text('user_id').notNull().references(() => User.userId),
     organizationId: text('organization_id').notNull().references(() => Organization.organizationId),
     taskId: text('task_id').notNull().references(() => Task.taskId),
-    status: integer('status').notNull(),
-    joinDate: int('join_date', { mode: "timestamp" }).notNull(),
-    finishedDate: int('finished_date', { mode: "timestamp" }),
+    status: integer('status').default(1),
+    joinDate: int('join_date', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+    finishedDate: int('finished_date', { mode: 'timestamp' })
 });
+
 
 // Relações
 export const UserRelations = relations(User, ({ one, many }) => ({
