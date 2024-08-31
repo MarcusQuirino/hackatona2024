@@ -15,8 +15,6 @@ import Link from "next/link";
 import QuestList from "@/components/quest-list";
 
 export default function BoardPage() {
-
-  const quests = [1, 2, 3, 4, 5];
   return (
     <main className="flex h-[calc(100vh-5rem)] flex-col items-center gap-8 p-8">
       <div className="flex w-full max-w-4xl justify-center gap-8">
@@ -64,7 +62,7 @@ export default function BoardPage() {
         <Input type="text" placeholder="Enter text here" className="w-1/2" />
       </div>
 
-      <QuestList quests = {quests} />
+      <QuestList />
     </main>
   );
 }
