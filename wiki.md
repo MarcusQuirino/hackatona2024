@@ -20,12 +20,55 @@ Especificamente, a plataforma visa:
 6. Promover a transparência e a prestação de contas nos esforços de resposta a desastres, fornecendo uma plataforma clara e acessível para o gerenciamento de projetos voluntários.
 
 ## UI/UX
+Utilizamos a ferramenta Figma para montar os mockups das telas e a ferramenta Canva para criação da identidade visual do projeto (logo, fontes, paleta de cores), assim podendo desenvolver a aplicação de modo dinâmico e colaborativo.
+
 ### Identidade Visual
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 ### Mockups
 
+Criamos os fluxos dos usuários a nível de voluntário e de organização. Iniciamos com o fluxo de login, onde o usuário é introduzido ao projeto. 
 
+![Alt text](images/login1.png)
+
+Seleciona seu caminho e preenche suas irnformações.
+
+![Alt text](images/login2.png)
+![Alt text](images/login3.png)
+
+Voluntários selecionam suas expertises para poderem encontrar ações em que pode ajudar.
+
+![Alt text](images/login4.png)
+![Alt text](images/login5.png)
+
+Ao entrar na plataforma, o usuário se depara com ações rankeadas por prioridades em que ele pode se voluntariar a partir também de seus conhecimentos.
+
+![Alt text](images/dashboard.png)
+
+A partir da barra de navegação lateral, o usuário é capaz de acessar as ações que ele, como voluntário, se candidatou, está na espera ou finalizou; e como organização, as que ela criou.
+
+![Alt text](images/minhasacoes.png)
+
+Assim que selecionar a opção "ver mais", o usuário voluntário é redirecionado às informações daquela ação: descrição, localização, nível de prioridade, disponibilidade, necessidades e botão de candidatura.
+
+![Alt text](images/acao.png)
+
+Entrando em sua própria página de perfil, é capaz de observar suas informações pessoais, ver e, se quiser, adicionar outras tags de habilidades.
+
+![Alt text](images/meuperfil1.png)
+
+Ao entrar em suas próprias estatísticas, o usuário voluntário se depara com os dados da quantidade de ações envolvidas, concluídas e realizadas naquele ano.
+
+![Alt text](images/meuperfil2.png)
+
+O usuário organização consegue criar uma nova ação, possibilitando descrevê-la, nomeá-la, selecionar sua prioridade, localização, além de suas tags de habilidades necessárias e quantidade de voluntários necessários.
+
+![Alt text](images/novaacao1.png)
+![Alt text](images/novaacao2.png)
+
+A visão do usuário organização sobre as ações tem apenas a modificação do botão por "Opções", no qual é possível editar suas informações, trocar sua prioridade ou exclui-la.
+
+![Alt text](images/acaoeditavel.png)
 
 ## Tecnologias
 Devido às restrições de tempo no desenvolvimento do projeto, optamos por uma abordagem full-stack eficiente, utilizando frameworks e bibliotecas modernas que permitissem um desenvolvimento rápido e robusto. Nossa stack tecnológica inclui:
@@ -63,7 +106,7 @@ Um sistema de gerenciamento de banco de dados relacional leve, rápido e autocon
 Um Object-Relational Mapping (ORM) TypeScript-first para SQL, conhecido por sua leveza e desempenho. O Drizzle ORM nos permite interagir com o banco de dados SQLite de forma mais intuitiva e type-safe, aumentando a produtividade do desenvolvimento e reduzindo a probabilidade de erros relacionados a consultas de banco de dados.
 
 **Modelagem Lógica**
-![alt text](image.png)
+![alt text](images/image.png)
 
 ## Processo de Software
 Para garantir um desenvolvimento eficiente e organizado de nossa plataforma de voluntariado, adotamos um conjunto de práticas e ferramentas que nos permitem gerenciar tarefas, manter a comunicação da equipe e otimizar o fluxo de trabalho.
@@ -123,5 +166,3 @@ A Vercel foi escolhida como nossa plataforma de deploy devido às seguintes vant
 2. Deploy Automático: A Vercel se integra diretamente com nosso repositório Git, permitindo deploys automáticos a cada push para a branch principal.
 3. Ambientes de Pré-visualização: Para cada pull request, a Vercel cria automaticamente um ambiente de pré-visualização, facilitando a revisão e teste de alterações antes do merge.
 4. Escalabilidade: A infraestrutura serverless da Vercel permite que nossa aplicação escale automaticamente conforme a demanda, sem necessidade de configuração manual.
-
-## Qualidade
