@@ -8,7 +8,7 @@ import { db } from "@/server/db";
 import { Task } from "@/server/db/schema";
 
 async function getTasks() {
-  const tasks = await db.select().from(Task);
+  const tasks = await db.select().from(Task).orderBy(Task.urgency);
   return tasks;
 }
 

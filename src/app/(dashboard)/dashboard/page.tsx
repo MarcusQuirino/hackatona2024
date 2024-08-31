@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Swords, RefreshCcw, UserRoundCheck, ArrowRight } from "lucide-react";
+import { Swords, RefreshCcw } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -9,9 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import QuestList from "@/components/quest-list";
 
 export default function BoardPage() {
