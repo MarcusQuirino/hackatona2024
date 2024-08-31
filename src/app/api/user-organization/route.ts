@@ -18,9 +18,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({message: "created"})
     } catch (error) {
         if (error instanceof Error) {
-            return NextResponse.json(error.message);
+            return NextResponse.json({ error: error.message }, {  status: 400 });
         } 
-        return NextResponse.json({ error: 'Failed to create user organization' });
+        return NextResponse.json({ error: 'Failed to create user organization' }, { status: 500 });
     }
 }
 
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
             return NextResponse.json(users);
         }
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch user organizations' });
+        return NextResponse.json({ error: 'Failed to fetch user organizations' }, { status: 500 });
     }
 }
 

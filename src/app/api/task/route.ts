@@ -44,9 +44,9 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      return NextResponse.json(error.message);
+      return NextResponse.json({ error: error.message }, {  status: 400 });
     }
-    return NextResponse.json({ error: "Failed to create task" });
+    return NextResponse.json({ error: "Failed to create task" }, { status: 500});
   }
 }
 
@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
     return NextResponse.json(
       { error: "Failed to fetch tasks" },
@@ -118,12 +118,12 @@ export async function PUT(req: NextRequest) {
         })
         .where(eq(Task.taskId, taskId));
 
-      return NextResponse.json({ data: "updated" });
+      return NextResponse.json({ data: "updated" }, {  status: 200 });
     } else {
-      return NextResponse.json({ error: "taskId is required" });
+      return NextResponse.json({ error: "taskId is required" }, { status: 400 });
     }
   } catch (error) {
-    return NextResponse.json({ error: "Failed to update task" });
+    return NextResponse.json({ error: "Failed to update task" }, {  status: 500 });
   }
 }
 
@@ -140,7 +140,7 @@ export async function DELETE(req: NextRequest) {
     }
   } catch (error) {
     if (error instanceof Error) {
-      return NextResponse.json(error.message);
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
     return NextResponse.json(
       { error: "Failed to delete task" },
