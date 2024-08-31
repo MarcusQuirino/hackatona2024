@@ -23,7 +23,7 @@ export default async function HomePage() {
         <h1 className="text-8xl font-bold">Xanflis Template ⚡</h1>
         <p className="text-2xl text-muted-foreground">by: Southlike Software</p>
       </div>
-      <div>
+      <div className="space-x-4">
         <SignedOut>
           <Button>
             <SignInButton />
