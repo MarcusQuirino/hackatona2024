@@ -29,7 +29,7 @@ export const Organization = sqliteTable("Organization", {
 export const Task = sqliteTable("Task", {
   organizationId: text("organization_id")
     .notNull()
-    .references(() => Organization.organizationId),
+    .references(() => Organization.organizationId, { onDelete: 'cascade' }),
   taskId: text("task_id").primaryKey().notNull(),
   name: text("name").notNull(),
   description: text("description").notNull(),
@@ -50,7 +50,7 @@ export const TaskRequisition = sqliteTable("TaskRequisition", {
     .references(() => Organization.organizationId),
   taskId: text("task_id")
     .notNull()
-    .references(() => Task.taskId),
+    .references(() => Task.taskId, { onDelete: 'cascade' }),
   requisitionId: text("requisition_id").notNull(),
   quantity: integer("quantity").notNull(),
   joined: integer("joined").notNull(),
@@ -59,13 +59,13 @@ export const TaskRequisition = sqliteTable("TaskRequisition", {
 export const UserTask = sqliteTable("UserTask", {
   userId: text("user_id")
     .notNull()
-    .references(() => User.userId),
+    .references(() => User.userId, { onDelete: 'cascade' }),
   organizationId: text("organization_id")
     .notNull()
-    .references(() => Organization.organizationId),
+    .references(() => Organization.organizationId, { onDelete: 'cascade' }),
   taskId: text("task_id")
     .notNull()
-    .references(() => Task.taskId),
+    .references(() => Task.taskId, { onDelete: 'cascade' }),
   status: integer("status").default(1),
   joinDate: int("join_date", { mode: "timestamp" }).default(sql`(unixepoch())`),
   finishedDate: int("finished_date", { mode: "timestamp" }),
@@ -74,10 +74,10 @@ export const UserTask = sqliteTable("UserTask", {
 export const UserOrganization = sqliteTable("UserOrganization", {
   userId: text("user_id")
     .notNull()
-    .references(() => User.userId),
+    .references(() => User.userId, { onDelete: 'cascade' }),
   organizationId: text("organization_id")
     .notNull()
-    .references(() => Organization.organizationId),
+    .references(() => Organization.organizationId, { onDelete: 'cascade' }),
 });
 
 // Relações
