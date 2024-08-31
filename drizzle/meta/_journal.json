@@ -1,0 +1,13 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1725072924689,
+      "tag": "0000_good_talos",
+      "breakpoints": true
+    }
+  ]
+}
