@@ -3,7 +3,7 @@
 import { db } from "@/server/db";
 import { Task } from "@/server/db/schema";
 import { randomUUID } from "crypto";
-import { eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { and } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -57,14 +57,16 @@ export async function GET(req: NextRequest) {
     const name = query.get("name")
     const city = query.get("city")
     const state = query.get("state")
-    const qualities = query.get("qualities")
+    const qualities = query.get("qualities")?.split(",").map(Number)
+
+    console.log(qualities)
 
     const tasks = await db.select().from(Task).where(
       and(
         name ? eq(Task.name, name) : undefined,
         city ? eq(Task.city, city) : undefined,
         state ? eq(Task.state, state) : undefined,
-        qualities ? or(...qualities.split(",").map((quality) => eq(Task.qualities, quality))) : undefined,
+        qualities ? eq(Task.qualities, JSON.stringify(qualities)) : undefined 
       )
     )
 

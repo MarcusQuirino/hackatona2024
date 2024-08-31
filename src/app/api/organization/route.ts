@@ -1,4 +1,4 @@
-import { db } from "@/server/db"
+  import { db } from "@/server/db"
 import { Organization } from "@/server/db/schema"
 import { randomUUID } from "crypto"
 import { eq } from "drizzle-orm"
