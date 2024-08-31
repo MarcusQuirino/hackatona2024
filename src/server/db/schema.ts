@@ -7,7 +7,7 @@ export const User = sqliteTable('User', {
     name: text('name').notNull(),
     qualities: integer('qualities').notNull(),
     email: text('email').notNull(),
-    clerkId: text('clerk_id').notNull(),
+    clerkId: text('clerk_id'),
     role: integer('role').notNull(),
     createdAt: int("created_at", { mode: "timestamp" }).default(
       sql`(unixepoch())`,
