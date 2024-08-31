@@ -1,12 +1,14 @@
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { ShowRoute } from "./show-route";
 
 export function LayoutHeader() {
   return (
-    <header className="borderb-b-foreground flex h-20 flex-row items-center justify-between border p-2">
-      <ThemeToggle />
-      <div>
+    <header className="flex h-20 flex-row items-center justify-between border border-b-foreground p-4">
+      <ShowRoute />
+      <div className="flex items-center gap-4">
+        <ThemeToggle />
         <SignedOut>
           <Button>
             <SignInButton />
