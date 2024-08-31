@@ -6,11 +6,12 @@ import { LayoutHeader } from "./(components)/layout-header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { type Metadata } from "next";
+import { Navbar } from "./(components)/navbar";
 
 export const metadata: Metadata = {
   title: "Xanflis Template",
   description: "build on top of 3T",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/savepoint.svg" }],
 };
 
 export default function RootLayout({
@@ -32,20 +33,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="flex min-h-screen flex-row">
-              <aside className="w-48 bg-secondary">
-                <nav className="p-4">
-                  <ul className="space-y-2">
-                    <li>
-                      <a
-                        href="/"
-                        className="block rounded px-4 py-2 hover:bg-primary/10"
-                      >
-                        Home
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </aside>
+              <Navbar />
               <div className="flex-1">
                 <LayoutHeader />
                 {children}
