@@ -37,7 +37,9 @@ export const Task = sqliteTable('Task', {
       sql`(unixepoch())`,
     ),
     updatedAt: int("updatedAt", { mode: "timestamp" }),
-    status: integer('status').notNull()
+    status: integer('status').notNull(),
+    city: text("city").notNull(),
+    state: text("state").notNull(),
 });
 
 export const TaskRequisition = sqliteTable('TaskRequisition', {
